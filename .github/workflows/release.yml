@@ -24,14 +24,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact_name: minigrep-linux
-            binary_name: minigrep        
+            binary_name: minigrep
+            release_name: minigrep-linux
           - os: macos-latest
-            artifact_name: minigrep-macos
-            binary_name: minigrep        
+            binary_name: minigrep
+            release_name: minigrep-macos
           - os: windows-latest
-            artifact_name: minigrep-windows
-            binary_name: minigrep.exe    
+            binary_name: minigrep.exe
+            release_name: minigrep-windows.exe
 
     steps:
       - name: Checkout repository
@@ -43,11 +43,17 @@ jobs:
       - name: Build release binary
         run: cargo build --release
 
+      # Fix: Rename the binary immediately so it doesn't collide with other OS builds
+      - name: Rename binary for uniqueness
+        shell: bash
+        run: |
+          mv target/release/${{ matrix.binary_name }} target/release/${{ matrix.release_name }}
+
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: target/release/${{ matrix.binary_name }}
+          name: ${{ matrix.release_name }}
+          path: target/release/${{ matrix.release_name }}
 
   create-release:
     name: Create GitHub release
@@ -67,11 +73,9 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Release ${{ env.RELEASE_TAG }}
           body: |
-            Initial release of minigrep.
-            Binaries for Linux, macOS, and Windows are included.
+            Official release of minigrep.
+            Pre-compiled binaries for Linux, macOS, and Windows are attached below.
           files: |
-            release-artifacts/minigrep-linux/minigrep
-            release-artifacts/minigrep-macos/minigrep
-            release-artifacts/minigrep-windows/minigrep.exe
+            release-artifacts/*/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
