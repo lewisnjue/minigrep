@@ -12,6 +12,9 @@ on:
         default: ''
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build release binaries
@@ -22,29 +25,26 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact_name: minigre-linux
-            binary_name: minigre
+            artifact_name: minigrep-linux
+            binary_name: minigrep
           - os: macos-latest
             target: x86_64-apple-darwin
-            artifact_name: minigre-macos
-            binary_name: minigre
+            artifact_name: minigrep-macos
+            binary_name: minigrep
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact_name: minigre-windows
-            binary_name: minigre.exe
+            artifact_name: minigrep-windows
+            binary_name: minigrep.exe
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Rust toolchain
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          profile: minimal
+          targets: ${{ matrix.target }}
 
-      - name: Add target
-        run: rustup target add ${{ matrix.target }}
 
       - name: Build release binary
         run: cargo build --release --target ${{ matrix.target }}
@@ -67,24 +67,17 @@ jobs:
         with:
           path: release-artifacts
 
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+      - name: Create and Populate GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Release ${{ env.RELEASE_TAG }}
           body: |
-            Initial release of minigre.
+            Initial release of minigrep.
             Binaries for Linux, macOS, and Windows are included.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.RELEASE_TAG }}
           files: |
-            release-artifacts/minigre-linux
-            release-artifacts/minigre-macos
-            release-artifacts/minigre-windows
+            release-artifacts/minigrep-linux/minigrep
+            release-artifacts/minigrep-macos/minigrep
+            release-artifacts/minigrep-windows/minigrep.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
