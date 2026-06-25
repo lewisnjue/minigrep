@@ -24,17 +24,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
             artifact_name: minigrep-linux
-            binary_name: minigrep
+            binary_name: minigrep        
           - os: macos-latest
-            target: x86_64-apple-darwin
             artifact_name: minigrep-macos
-            binary_name: minigrep
+            binary_name: minigrep        
           - os: windows-latest
-            target: x86_64-pc-windows-msvc
             artifact_name: minigrep-windows
-            binary_name: minigrep.exe
+            binary_name: minigrep.exe    
 
     steps:
       - name: Checkout repository
@@ -42,18 +39,15 @@ jobs:
 
       - name: Set up Rust toolchain
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
-
 
       - name: Build release binary
-        run: cargo build --release --target ${{ matrix.target }}
+        run: cargo build --release
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
-          path: target/${{ matrix.target }}/release/${{ matrix.binary_name }}
+          path: target/release/${{ matrix.binary_name }}
 
   create-release:
     name: Create GitHub release
