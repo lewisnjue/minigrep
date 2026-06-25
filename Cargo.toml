@@ -2,7 +2,7 @@
 name = "minigrep"
 version = "0.1.0"
 edition = "2024"
-description = "A small grep-like command line search tool built while learning Rust."
+description = "A small grep-like command line search tool that works like grep."
 license = "MIT"
 repository = "https://github.com/lewisnjue/minigrep"
 homepage = "https://github.com/lewisnjue/minigrep"
