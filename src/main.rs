@@ -1,16 +1,14 @@
 use std::env;
-use std::fs;
+use std::process;
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let query = &args[1];
-    let file_path = &args[2];
-    println!("Searching {}", query);
-    println!("In file {}", file_path);
+    let config = minigre::Config::build(&args).unwrap_or_else(|err| {
+        eprintln!("failed with error : {}", err);
 
-    let content = fs::read_to_string(file_path)
-        .expect("should have been able to read the content of the file");
-    println!(
-        " THE CONTENT OF THE FILE IS \n =================================\n \n  {}",
-        content
-    );
+        process::exit(1);
+    });
+    if let Err(e) = minigre::run(config) {
+        eprintln!("failed with error : {}", e);
+        process::exit(1);
+    }
 }
