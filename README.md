@@ -2,7 +2,7 @@
 
 A small command-line search tool written in Rust . It behaves like a simplified `grep` and supports case-insensitive search using the `IGNORE_CASE` environment variable.
 
-[![Release](https://github.com/lewisnjue/minigrep/actions/workflows/release.yml/badge.svg)](https://github.com/lewisnjue/minigrep/actions/workflows/release.yml)
+[![Release](https://github.com/lewisnjue/minigrep/actions/workflows/release.yml/badge.svg)](https://github.com/lewisnjue/minigrep/releases/)
 
 ## Features
 
