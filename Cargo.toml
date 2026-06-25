@@ -2,5 +2,11 @@
 name = "minigre"
 version = "0.1.0"
 edition = "2024"
+description = "A small grep-like command line search tool built while learning Rust."
+license = "MIT"
+repository = "https://github.com/lewisnjue/minigrep"
+homepage = "https://github.com/lewisnjue/minigrep"
+authors = ["lewisnjue <noreply@github.com>"]
+keywords = ["cli", "grep", "rust", "search"]
 
 [dependencies]
